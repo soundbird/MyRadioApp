@@ -14,4 +14,11 @@
         android:padding="16dp"
         android:textIsSelectable="true" />
 
+    <ToggleButton
+        android:id="@+id/tocar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="@string/tocar"
+        android:textOn="@string/pausar" />
+
 </LinearLayout>

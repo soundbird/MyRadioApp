@@ -3,5 +3,7 @@
 
     <string name="app_name">MyRadio</string>
     <string name="title_music_detail">Music Detail</string>
+    <string name="tocar">Tocar</string>
+    <string name="pausar">Pausar</string>
 
 </resources>
