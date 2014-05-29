@@ -10,7 +10,8 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import br.com.soundbird.myradio.mobile.dummy.DummyContent;
+import br.com.soundbird.myradio.mobile.model.Lista;
+import br.com.soundbird.myradio.mobile.model.Musica;
 
 /**
  * A fragment representing a single Music detail screen. This fragment is either
@@ -24,12 +25,9 @@ public class MusicDetailFragment extends Fragment {
 	 */
 	public static final String ARG_ITEM_ID = "item_id";
 
-	/**
-	 * The dummy content this fragment is presenting.
-	 */
-	private DummyContent.DummyItem mItem;
+	private Musica mMusica;
 	
-	private MediaPlayer tocador;
+	private MediaPlayer mTocador;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -46,7 +44,7 @@ public class MusicDetailFragment extends Fragment {
 			// Load the dummy content specified by the fragment
 			// arguments. In a real-world scenario, use a Loader
 			// to load content from a content provider.
-			mItem = DummyContent.ITEM_MAP.get(getArguments().getString(
+			mMusica = Lista.MUSICAS.get(getArguments().getInt(
 					ARG_ITEM_ID));
 		}
 	}
@@ -58,9 +56,9 @@ public class MusicDetailFragment extends Fragment {
 				container, false);
 
 		// Show the dummy content as text in a TextView.
-		if (mItem != null) {
+		if (mMusica != null) {
 			((TextView) rootView.findViewById(R.id.music_detail))
-					.setText(mItem.content);
+					.setText(mMusica.getNome());
 		}
 		
 		((ToggleButton) rootView.findViewById(R.id.tocar))
@@ -69,18 +67,29 @@ public class MusicDetailFragment extends Fragment {
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					if (isChecked) {
-						if (tocador == null) {
-							tocador = MediaPlayer.create(getActivity(), R.raw.lumaban_ka);
+						if (mTocador == null) {
+							mTocador = MediaPlayer.create(getActivity(), mMusica.getLocal());
 						}
 						
-						tocador.start();
+						mTocador.start();
 					} else {
-						tocador.pause();
+						mTocador.pause();
 					}
 					
 				}
 			});
 
 		return rootView;
+	}
+	
+	@Override
+	public void onDestroyView() {
+		
+		if (mTocador != null) {
+			mTocador.stop();
+			mTocador.release();
+		}
+		
+		super.onDestroyView();
 	}
 }

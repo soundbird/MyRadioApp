@@ -37,8 +37,8 @@ public class MusicDetailActivity extends FragmentActivity {
 			// Create the detail fragment and add it to the activity
 			// using a fragment transaction.
 			Bundle arguments = new Bundle();
-			arguments.putString(MusicDetailFragment.ARG_ITEM_ID, getIntent()
-					.getStringExtra(MusicDetailFragment.ARG_ITEM_ID));
+			arguments.putInt(MusicDetailFragment.ARG_ITEM_ID, getIntent()
+					.getIntExtra(MusicDetailFragment.ARG_ITEM_ID, 0));
 			MusicDetailFragment fragment = new MusicDetailFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()

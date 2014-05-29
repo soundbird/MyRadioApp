@@ -6,8 +6,8 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import br.com.soundbird.myradio.mobile.dummy.DummyContent;
+import br.com.soundbird.myradio.mobile.model.Lista;
+import br.com.soundbird.myradio.mobile.model.Musica;
 
 /**
  * A list fragment representing a list of Library. This fragment also supports
@@ -46,7 +46,7 @@ public class MusicListFragment extends ListFragment {
 		/**
 		 * Callback for when an item has been selected.
 		 */
-		public void onItemSelected(String id);
+		public void onItemSelected(int pos);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class MusicListFragment extends ListFragment {
 	 */
 	private static Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
-		public void onItemSelected(String id) {
+		public void onItemSelected(int pos) {
 		}
 	};
 
@@ -69,11 +69,11 @@ public class MusicListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		// TODO: replace with a real list adapter.
-		setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
+		setListAdapter(new ArrayAdapter<Musica>(getActivity(),
 				android.R.layout.simple_list_item_activated_1,
-				android.R.id.text1, DummyContent.ITEMS));
+				android.R.id.text1, Lista.MUSICAS));
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class MusicListFragment extends ListFragment {
 
 		// Notify the active callbacks interface (the activity, if the
 		// fragment is attached to one) that an item has been selected.
-		mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
+		mCallbacks.onItemSelected(position);
 	}
 
 	@Override
