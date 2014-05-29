@@ -1,12 +1,15 @@
 package br.com.soundbird.myradio.mobile;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
-
+import android.widget.ToggleButton;
 import br.com.soundbird.myradio.mobile.dummy.DummyContent;
 
 /**
@@ -25,6 +28,8 @@ public class MusicDetailFragment extends Fragment {
 	 * The dummy content this fragment is presenting.
 	 */
 	private DummyContent.DummyItem mItem;
+	
+	private MediaPlayer tocador;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -57,6 +62,24 @@ public class MusicDetailFragment extends Fragment {
 			((TextView) rootView.findViewById(R.id.music_detail))
 					.setText(mItem.content);
 		}
+		
+		((ToggleButton) rootView.findViewById(R.id.tocar))
+			.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					if (isChecked) {
+						if (tocador == null) {
+							tocador = MediaPlayer.create(getActivity(), R.raw.lumaban_ka);
+						}
+						
+						tocador.start();
+					} else {
+						tocador.pause();
+					}
+					
+				}
+			});
 
 		return rootView;
 	}
