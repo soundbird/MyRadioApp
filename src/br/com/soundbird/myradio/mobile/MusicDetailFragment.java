@@ -1,7 +1,12 @@
 package br.com.soundbird.myradio.mobile;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +17,15 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import br.com.soundbird.myradio.mobile.model.Lista;
 import br.com.soundbird.myradio.mobile.model.Musica;
+import br.com.soundbird.myradio.mobile.service.TocadorService;
+import br.com.soundbird.myradio.mobile.tocador.ITocador;
 
 /**
  * A fragment representing a single Music detail screen. This fragment is either
  * contained in a {@link MusicListActivity} in two-pane mode (on tablets) or a
  * {@link MusicDetailActivity} on handsets.
  */
-public class MusicDetailFragment extends Fragment {
+public class MusicDetailFragment extends Fragment implements ServiceConnection {
 	/**
 	 * The fragment argument representing the item ID that this fragment
 	 * represents.
@@ -27,7 +34,9 @@ public class MusicDetailFragment extends Fragment {
 
 	private Musica mMusica;
 	
-	private MediaPlayer mTocador;
+	private ToggleButton mTocarPausar;
+	
+	private ITocador mTocador;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -47,6 +56,8 @@ public class MusicDetailFragment extends Fragment {
 			mMusica = Lista.MUSICAS.get(getArguments().getInt(
 					ARG_ITEM_ID));
 		}
+		
+		getActivity().bindService(new Intent(getActivity(), TocadorService.class), this, Context.BIND_AUTO_CREATE);
 	}
 
 	@Override
@@ -61,19 +72,17 @@ public class MusicDetailFragment extends Fragment {
 					.setText(mMusica.getNome());
 		}
 		
-		((ToggleButton) rootView.findViewById(R.id.tocar))
+		mTocarPausar = (ToggleButton) rootView.findViewById(R.id.botao_tocar);
+		
+		mTocarPausar
 			.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					if (isChecked) {
-						if (mTocador == null) {
-							mTocador = MediaPlayer.create(getActivity(), mMusica.getLocal());
-						}
-						
-						mTocador.start();
+						mTocador.tocar(mMusica);
 					} else {
-						mTocador.pause();
+						mTocador.pausar();
 					}
 					
 				}
@@ -84,12 +93,17 @@ public class MusicDetailFragment extends Fragment {
 	
 	@Override
 	public void onDestroyView() {
-		
-		if (mTocador != null) {
-			mTocador.stop();
-			mTocador.release();
-		}
-		
+		getActivity().unbindService(this);
 		super.onDestroyView();
+	}
+
+	@Override
+	public void onServiceConnected(ComponentName name, IBinder service) {
+		mTocador = (ITocador) service;
+	}
+
+	@Override
+	public void onServiceDisconnected(ComponentName name) {
+		mTocador = null;
 	}
 }

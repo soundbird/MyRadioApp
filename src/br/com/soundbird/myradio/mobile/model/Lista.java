@@ -15,8 +15,8 @@ public class Lista {
 	}
 	
 	static {
-		adicionaMusica(new Musica("Lumaban Ka", Uri.parse("android.resource://br.com.soundbird.myradio.mobile/" + R.raw.lumaban_ka)));
 		adicionaMusica(new Musica("Some Sort of Creature", Uri.parse("android.resource://br.com.soundbird.myradio.mobile/" + R.raw.some_sort_of_creature)));
+		adicionaMusica(new Musica("Lumaban Ka", Uri.parse("android.resource://br.com.soundbird.myradio.mobile/" + R.raw.lumaban_ka)));
 	}
 	
 }
