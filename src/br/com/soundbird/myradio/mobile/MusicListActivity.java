@@ -1,5 +1,6 @@
 package br.com.soundbird.myradio.mobile;
 
+import br.com.soundbird.myradio.mobile.service.TocadorService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -45,6 +46,8 @@ public class MusicListActivity extends FragmentActivity implements
 			((MusicListFragment) getSupportFragmentManager().findFragmentById(
 					R.id.music_list)).setActivateOnItemClick(true);
 		}
+		
+		startService(new Intent(this, TocadorService.class));
 
 		// TODO: If exposing deep links into your app, handle intents here.
 	}
