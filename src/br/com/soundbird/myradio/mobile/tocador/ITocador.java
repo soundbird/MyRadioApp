@@ -10,4 +10,5 @@ public interface ITocador {
 	public void tocar(Musica musica);
 	public void pausar();
 	public void parar();
+	public boolean tocando(Musica musica);
 }

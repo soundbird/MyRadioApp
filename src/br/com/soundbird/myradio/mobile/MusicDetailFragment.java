@@ -99,6 +99,8 @@ public class MusicDetailFragment extends Fragment implements ServiceConnection {
 	@Override
 	public void onServiceConnected(ComponentName name, IBinder service) {
 		mTocador = (ITocador) service;
+		
+		mTocarPausar.setChecked(mTocador.tocando(mMusica));
 	}
 
 	@Override

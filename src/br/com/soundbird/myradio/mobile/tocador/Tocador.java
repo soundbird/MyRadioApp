@@ -12,6 +12,8 @@ public class Tocador extends Binder implements ITocador, OnCompletionListener {
 
 	private final MediaPlayer mMediaPlayer = new MediaPlayer();
 	
+	private Musica mTocando;
+	
 	public Tocador() {
 		mMediaPlayer.setOnCompletionListener(this);
 	}
@@ -27,12 +29,16 @@ public class Tocador extends Binder implements ITocador, OnCompletionListener {
 
 	@Override
 	public void tocar(Musica musica) {
-		mMediaPlayer.reset();
-		try {
-			mMediaPlayer.setDataSource(MyRadioApp.getContext(), musica.getLocal());
-			mMediaPlayer.prepare();
-		} catch (Exception e) {
+		if (!tocando(musica)) {
+			mMediaPlayer.reset();
+			try {
+				mMediaPlayer.setDataSource(MyRadioApp.getContext(), musica.getLocal());
+				mMediaPlayer.prepare();
+			} catch (Exception e) {
+			}
+			mTocando = musica;
 		}
+		
 		mMediaPlayer.start();
 	}
 
@@ -45,6 +51,11 @@ public class Tocador extends Binder implements ITocador, OnCompletionListener {
 	public void parar() {
 		mMediaPlayer.stop();
 	}
+
+	@Override
+	public boolean tocando(Musica musica) {
+		return mTocando != null && mTocando.getId() == musica.getId();
+	}
 	
 	public void fechar() {
 		parar();
@@ -53,6 +64,7 @@ public class Tocador extends Binder implements ITocador, OnCompletionListener {
 
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
+		mTocando = null;
 	}
 
 }

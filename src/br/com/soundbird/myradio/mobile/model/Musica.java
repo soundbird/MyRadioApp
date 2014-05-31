@@ -3,31 +3,38 @@ package br.com.soundbird.myradio.mobile.model;
 import android.net.Uri;
 
 public class Musica {
+	
+	private static long sCounter = 0;
 
-	private String nome;
-	private Uri local;
+	private long mId;
+	private String mNome;
+	private Uri mLocal;
 	
 	public Musica(String nome, Uri local) {
 		super();
-		this.nome = nome;
-		this.local = local;
+		this.mId = ++sCounter;
+		this.mNome = nome;
+		this.mLocal = local;
 	}
 	
 	@Override
 	public String toString() {
-		return this.nome;
+		return this.mNome;
 	};
 	
+	public long getId() {
+		return mId;
+	}
 	public String getNome() {
-		return nome;
+		return mNome;
 	}
 	public void setNome(String nome) {
-		this.nome = nome;
+		this.mNome = nome;
 	}
 	public Uri getLocal() {
-		return local;
+		return mLocal;
 	}
 	public void setLocal(Uri local) {
-		this.local = local;
+		this.mLocal = local;
 	}
 }
