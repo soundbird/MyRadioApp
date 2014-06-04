@@ -2,10 +2,17 @@ package br.com.soundbird.myradio.mobile;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
+import android.widget.ToggleButton;
 import br.com.soundbird.myradio.mobile.model.Lista;
 import br.com.soundbird.myradio.mobile.model.Musica;
 
@@ -18,7 +25,7 @@ import br.com.soundbird.myradio.mobile.model.Musica;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class MusicListFragment extends ListFragment {
+public class MusicListFragment extends Fragment {
 
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
@@ -36,6 +43,12 @@ public class MusicListFragment extends ListFragment {
 	 * The current activated item position. Only used on tablets.
 	 */
 	private int mActivatedPosition = ListView.INVALID_POSITION;
+	
+	private ToggleButton mTocarPausarLista;
+	
+	private ListView mMusicList;
+	
+	private ArrayAdapter<Musica> mMusicAdapter;
 
 	/**
 	 * A callback interface that all activities containing this fragment must
@@ -70,23 +83,31 @@ public class MusicListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		// TODO: replace with a real list adapter.
-		setListAdapter(new ArrayAdapter<Musica>(getActivity(),
-				android.R.layout.simple_list_item_activated_1,
-				android.R.id.text1, Lista.MUSICAS));
+		mMusicAdapter = new ArrayAdapter<Musica>(getActivity(),
+			android.R.layout.simple_list_item_activated_1,
+			android.R.id.text1, Lista.MUSICAS);
 	}
-
+	
 	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-
-		// Restore the previously serialized activated item position.
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_music_list, container, false);
+		
+		mTocarPausarLista = (ToggleButton) rootView.findViewById(R.id.botao_tocar_lista);
+		
+		mMusicList = (ListView) rootView.findViewById(R.id.lista_musica);
+		
 		if (savedInstanceState != null
 				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
-			setActivatedPosition(savedInstanceState
-					.getInt(STATE_ACTIVATED_POSITION));
+			setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
 		}
+		
+		initTocarPausarLista();
+		initMusicList();
+		
+		return rootView;
 	}
+	
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -109,14 +130,27 @@ public class MusicListFragment extends ListFragment {
 		mCallbacks = sDummyCallbacks;
 	}
 
-	@Override
-	public void onListItemClick(ListView listView, View view, int position,
-			long id) {
-		super.onListItemClick(listView, view, position, id);
+	private void initTocarPausarLista() {
+		mTocarPausarLista.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				// Tocar lista
+			}
+		});
+	}
+	
+	private void initMusicList() {
+		mMusicList.setAdapter(mMusicAdapter);
+		
+		mMusicList.setOnItemClickListener(new OnItemClickListener() {
 
-		// Notify the active callbacks interface (the activity, if the
-		// fragment is attached to one) that an item has been selected.
-		mCallbacks.onItemSelected(position);
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View view, int position,
+					long id) {
+				mCallbacks.onItemSelected(position);
+			}
+		});
 	}
 
 	@Override
@@ -135,16 +169,16 @@ public class MusicListFragment extends ListFragment {
 	public void setActivateOnItemClick(boolean activateOnItemClick) {
 		// When setting CHOICE_MODE_SINGLE, ListView will automatically
 		// give items the 'activated' state when touched.
-		getListView().setChoiceMode(
+		mMusicList.setChoiceMode(
 				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
 						: ListView.CHOICE_MODE_NONE);
 	}
 
 	private void setActivatedPosition(int position) {
 		if (position == ListView.INVALID_POSITION) {
-			getListView().setItemChecked(mActivatedPosition, false);
+			mMusicList.setItemChecked(mActivatedPosition, false);
 		} else {
-			getListView().setItemChecked(position, true);
+			mMusicList.setItemChecked(position, true);
 		}
 
 		mActivatedPosition = position;
