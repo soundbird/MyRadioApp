@@ -16,7 +16,7 @@ public class Lista implements ITocavel{
 	private int mIndice;
 
 	public Lista(String nome) {
-		this.mId = ++ sCounter;
+		this.mId = ++sCounter;
 		this.mNome = nome;
 		this.mMusicas = new ArrayList<Musica>();
 		this.mIndice = 0;

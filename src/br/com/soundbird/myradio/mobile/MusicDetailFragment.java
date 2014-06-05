@@ -18,6 +18,7 @@ import br.com.soundbird.myradio.mobile.model.Musica;
 import br.com.soundbird.myradio.mobile.model.MyRadioCache;
 import br.com.soundbird.myradio.mobile.service.TocadorService;
 import br.com.soundbird.myradio.mobile.tocador.ITocador;
+import br.com.soundbird.myradio.mobile.tocador.OnPausedListener;
 
 /**
  * A fragment representing a single Music detail screen. This fragment is either
@@ -80,6 +81,8 @@ public class MusicDetailFragment extends Fragment implements ServiceConnection {
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					if (isChecked) {
 						mTocador.tocar(mMusica);
+						
+						mTocador.setOnPausedListener(new MusicaTerminada());
 					} else {
 						mTocador.pausar();
 					}
@@ -106,5 +109,14 @@ public class MusicDetailFragment extends Fragment implements ServiceConnection {
 	@Override
 	public void onServiceDisconnected(ComponentName name) {
 		mTocador = null;
+	}
+	
+	private class MusicaTerminada implements OnPausedListener {
+		
+		@Override
+		public void onPaused() {
+			mTocarPausar.setChecked(false);
+		}
+		
 	}
 }
