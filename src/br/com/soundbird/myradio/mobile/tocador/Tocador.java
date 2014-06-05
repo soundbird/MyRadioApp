@@ -1,18 +1,16 @@
 package br.com.soundbird.myradio.mobile.tocador;
 
-import java.util.List;
-
-import br.com.soundbird.myradio.mobile.MyRadioApp;
-import br.com.soundbird.myradio.mobile.model.Musica;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Binder;
+import android.util.Log;
+import br.com.soundbird.myradio.mobile.MyRadioApp;
 
 public class Tocador extends Binder implements ITocador, OnCompletionListener {
 
 	private final MediaPlayer mMediaPlayer = new MediaPlayer();
 	
-	private Musica mTocando;
+	private ITocavel mTocando;
 	
 	public Tocador() {
 		mMediaPlayer.setOnCompletionListener(this);
@@ -24,22 +22,21 @@ public class Tocador extends Binder implements ITocador, OnCompletionListener {
 	}
 
 	@Override
-	public void tocar(List<Musica> musicas) {
-	}
-
-	@Override
-	public void tocar(Musica musica) {
-		if (!tocando(musica)) {
+	public void tocar(ITocavel tocavel) {
+		boolean tocando;
+		Log.d("MyRadio", String.valueOf(tocando = !tocando(tocavel)));
+		if (tocando) {
 			mMediaPlayer.reset();
 			try {
-				mMediaPlayer.setDataSource(MyRadioApp.getContext(), musica.getLocal());
+				mMediaPlayer.setDataSource(MyRadioApp.getContext(), tocavel.getLocal());
 				mMediaPlayer.prepare();
 			} catch (Exception e) {
+				Log.d("MyRadio", "Exceção", e);
 			}
-			mTocando = musica;
+			mTocando = tocavel;
 		}
 		
-		mMediaPlayer.start();
+		tocar();
 	}
 
 	@Override
@@ -53,8 +50,8 @@ public class Tocador extends Binder implements ITocador, OnCompletionListener {
 	}
 
 	@Override
-	public boolean tocando(Musica musica) {
-		return mTocando != null && mTocando.getId() == musica.getId();
+	public boolean tocando(ITocavel tocavel) {
+		return mTocando != null && mTocando.getClass() == tocavel.getClass() && mTocando.getId() == tocavel.getId();
 	}
 	
 	public void fechar() {
@@ -63,8 +60,12 @@ public class Tocador extends Binder implements ITocador, OnCompletionListener {
 	}
 
 	@Override
-	public void onCompletion(MediaPlayer arg0) {
-		mTocando = null;
+	public void onCompletion(MediaPlayer mediaPlayer) {
+		mTocando = mTocando.getProx();
+		
+		if (mTocando != null) {
+			tocar(mTocando);
+		}
 	}
 
 }

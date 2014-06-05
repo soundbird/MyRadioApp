@@ -13,8 +13,8 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.ToggleButton;
-import br.com.soundbird.myradio.mobile.model.Lista;
 import br.com.soundbird.myradio.mobile.model.Musica;
+import br.com.soundbird.myradio.mobile.model.MyRadioCache;
 
 /**
  * A list fragment representing a list of Library. This fragment also supports
@@ -85,7 +85,7 @@ public class MusicListFragment extends Fragment {
 		
 		mMusicAdapter = new ArrayAdapter<Musica>(getActivity(),
 			android.R.layout.simple_list_item_activated_1,
-			android.R.id.text1, Lista.MUSICAS);
+			android.R.id.text1, MyRadioCache.lista.getMusicas());
 	}
 	
 	@Override

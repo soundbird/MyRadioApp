@@ -1,8 +1,9 @@
 package br.com.soundbird.myradio.mobile.model;
 
+import br.com.soundbird.myradio.mobile.tocador.ITocavel;
 import android.net.Uri;
 
-public class Musica {
+public class Musica implements ITocavel {
 	
 	private static long sCounter = 0;
 
@@ -22,6 +23,7 @@ public class Musica {
 		return this.mNome;
 	};
 	
+	@Override
 	public long getId() {
 		return mId;
 	}
@@ -31,10 +33,16 @@ public class Musica {
 	public void setNome(String nome) {
 		this.mNome = nome;
 	}
+	@Override
 	public Uri getLocal() {
 		return mLocal;
 	}
 	public void setLocal(Uri local) {
 		this.mLocal = local;
+	}
+
+	@Override
+	public ITocavel getProx() {
+		return null;
 	}
 }

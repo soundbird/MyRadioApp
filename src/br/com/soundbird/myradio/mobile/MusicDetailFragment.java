@@ -14,8 +14,8 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import br.com.soundbird.myradio.mobile.model.Lista;
 import br.com.soundbird.myradio.mobile.model.Musica;
+import br.com.soundbird.myradio.mobile.model.MyRadioCache;
 import br.com.soundbird.myradio.mobile.service.TocadorService;
 import br.com.soundbird.myradio.mobile.tocador.ITocador;
 
@@ -52,7 +52,7 @@ public class MusicDetailFragment extends Fragment implements ServiceConnection {
 			// Load the dummy content specified by the fragment
 			// arguments. In a real-world scenario, use a Loader
 			// to load content from a content provider.
-			mMusica = Lista.MUSICAS.get(getArguments().getInt(
+			mMusica = MyRadioCache.lista.getMusica(getArguments().getInt(
 					ARG_ITEM_ID));
 		}
 		
